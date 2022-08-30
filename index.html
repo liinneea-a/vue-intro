@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            background-color: purple;
+            height: 200px;
+            width: 200px
+        }
+        .box2 {
+            background-color: green;
+            height: 200px;
+            width: 200px
+        }
+        .box3 {
+            background-color: blue;
+            height: 200px;
+            width: 200px
+        }
+        [v-cloak] {
+            display: none;
+        }
+        input {
+            margin: 10px;
+            display:block;
+        }
+    </style>
+</head>
+<body>
+    <div class="box"></div> id="root" v-cloak>
+        <login-form />
+    
+
+        <hr />
+        <button @click="toggleBox">toggle box</button>
+        <div class="box"></div> v-if="isVisible" class="box"><<div class="box"></div>>
+    <<div class="box"></div>>
+
+    <script src="https://unpkg.com/vue@3"></script>
+<script>
+   let app = Vue.createApp({
+    data: function() {
+        return {
+            greeting: 'hello vue 3',
+            isVisible: false,
+        }
+    },
+    methods: {
+        toggleBox() {
+            this.isVisible = !this.isVisible
+        },
+        greet(greeting) {
+            console.log(greeting)
+        }
+    }
+   })
+
+
+
+
+
+   app.component('login-form', {
+        // v-model lyssna på update: eventet som är skrivet längre ner från barnet
+        //När eventet emittas lyssnar v-model och uppdaterar värdet för oss
+        // : = props. En vanlig prop kan inte ändras i barnet och skickas upp till föräldern
+        // Variablerna i data kan bara ändras i samma komponent
+
+        //v-for är samma som en for-loop så här säger den for each string in inputs.
+    template: /*html*/`
+    <form @submit.prevent="handleSubmit">
+        <h1>{{ title }}</h1>
+
+        <custom-input 
+        v-for="(input, i) in inputs"
+        :key="i"
+        v-model="input.value" 
+        :label="input.label"
+        :type="input.type" 
+        />
+  
+        
+        <button>Log in</button>
+    </form @submit="handleSubmit">
+    `,
+    components: ['custom-input'],
+    data() {
+        return {
+            title: 'Login form',
+            inputs: [
+               {
+                label: 'Email',
+                value: '',
+                type: 'email'
+               },
+               {
+                label: 'Password',
+                value: '',
+                type: 'password'
+               }
+            ],
+            } 
+    },
+    methods: {
+        handleSubmit() {
+            console.log('submitted')
+            console.log(this.inputs[0].value, this.inputs[1].value)
+        }
+    }
+   })
+
+
+
+
+   app.component('custom-input', {
+    template: /*html*/`
+    <label>
+        {{ label }}
+        <input :type="type" v-model="inputValue"/>
+    </label>
+    `,
+    props: ['label', 'type' ,'modelValue'],
+    computed:  {
+        inputValue: {
+            get() {
+                // Här tas read-only värdet emot
+                // och i set ändras värdet och emittas ut igen
+                return this.modelValue
+            },
+            set(value) {
+                console.log(value)
+                // emittar events som andra komponenter kan lyssna på
+                //Första parametern är typen av event som jag emitter
+                //andra är valuet som jag passing throuh mitt event
+                this.$emit('update:modelValue', value)
+            }
+        }
+    },
+    // data() {
+    //     return {
+    //         inputValue: ''
+    //     }
+    // }
+   })
+   app.mount('#root')
+   
+</script>
+</script>
+</body>
+</html>
