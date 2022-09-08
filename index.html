@@ -64,12 +64,7 @@
 
 
    app.component('login-form', {
-        // v-model lyssna på update: eventet som är skrivet längre ner från barnet
-        //När eventet emittas lyssnar v-model och uppdaterar värdet för oss
-        // : = props. En vanlig prop kan inte ändras i barnet och skickas upp till föräldern
-        // Variablerna i data kan bara ändras i samma komponent
-
-        //v-for är samma som en for-loop så här säger den for each string in inputs.
+      
     template: /*html*/`
     <form @submit.prevent="handleSubmit">
         <h1>{{ title }}</h1>
